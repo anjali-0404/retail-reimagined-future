@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDemo } from "@/hooks/useDemo";
+import { useScrollTo } from "@/hooks/useScrollTo";
 import { 
   Brain, 
   Eye, 
@@ -142,8 +144,23 @@ const getStatusColor = (status: string) => {
 };
 
 export const TechShowcase = () => {
+  const { isLoading, startDemo, scheduleDemo } = useDemo();
+  const { scrollToSection } = useScrollTo();
+
+  const handleTechDemo = (techName: string) => {
+    startDemo(techName);
+  };
+
+  const handleScheduleDemo = () => {
+    scheduleDemo("Technology");
+  };
+
+  const handleLearnMore = (techName: string) => {
+    scrollToSection("interactive-demo");
+  };
+
   return (
-    <section className="py-24 bg-background">
+    <section id="tech-showcase" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
           <Badge variant="secondary" className="mb-4">
@@ -213,11 +230,17 @@ export const TechShowcase = () => {
                       </p>
                       
                       <div className="flex gap-2">
-                        <Button variant="tech" size="sm" className="flex-1">
+                        <Button 
+                          variant="tech" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => handleTechDemo(tech.name)}
+                          disabled={isLoading}
+                        >
                           <Play className="w-3 h-3 mr-1" />
-                          Demo
+                          {isLoading ? "Loading..." : "Demo"}
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleLearnMore(tech.name)}>
                           <ArrowRight className="w-3 h-3" />
                         </Button>
                       </div>
@@ -230,9 +253,9 @@ export const TechShowcase = () => {
         </Tabs>
 
         <div className="text-center mt-16">
-          <Button variant="hero" size="xl" className="group">
+          <Button variant="hero" size="xl" className="group" onClick={handleScheduleDemo} disabled={isLoading}>
             <MessageSquare className="w-5 h-5 mr-2" />
-            Schedule Technology Demo
+            {isLoading ? "Scheduling..." : "Schedule Technology Demo"}
             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>

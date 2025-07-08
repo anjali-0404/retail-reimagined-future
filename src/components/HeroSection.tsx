@@ -1,11 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Sparkles, Brain, Eye } from "lucide-react";
+import { useScrollTo } from "@/hooks/useScrollTo";
+import { useDemo } from "@/hooks/useDemo";
 import heroImage from "@/assets/hero-retail.jpg";
 
 export const HeroSection = () => {
+  const { scrollToSection } = useScrollTo();
+  const { isLoading, startDemo } = useDemo();
+
+  const handleExploreTech = () => {
+    scrollToSection("features");
+  };
+
+  const handleAIDemo = () => {
+    startDemo("AI Shopping Assistant");
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-hero opacity-20" />
       
@@ -41,14 +54,14 @@ export const HeroSection = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="xl" className="group">
+              <Button variant="hero" size="xl" className="group" onClick={handleExploreTech}>
                 Explore Technologies
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
               
-              <Button variant="futuristic" size="xl" className="group">
+              <Button variant="futuristic" size="xl" className="group" onClick={handleAIDemo} disabled={isLoading}>
                 <Brain className="w-5 h-5 mr-2" />
-                AI Demo
+                {isLoading ? "Loading..." : "AI Demo"}
               </Button>
             </div>
             

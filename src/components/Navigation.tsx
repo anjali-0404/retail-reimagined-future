@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useScrollTo } from "@/hooks/useScrollTo";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Menu, 
   X, 
@@ -11,14 +13,36 @@ import {
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scrollToSection } = useScrollTo();
+  const { toast } = useToast();
 
   const navItems = [
-    { name: "Technologies", href: "#technologies" },
-    { name: "Solutions", href: "#solutions" },
-    { name: "Analytics", href: "#analytics" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "Contact", href: "#contact" }
+    { name: "Technologies", href: "tech-showcase" },
+    { name: "Solutions", href: "features" },
+    { name: "Analytics", href: "stats" },
+    { name: "Testimonials", href: "testimonials" },
+    { name: "Contact", href: "contact" }
   ];
+
+  const handleNavClick = (href: string) => {
+    scrollToSection(href);
+    setIsMenuOpen(false);
+  };
+
+  const handleSignIn = () => {
+    toast({
+      title: "Sign In",
+      description: "Sign in functionality would be implemented here with your authentication system.",
+    });
+  };
+
+  const handleGetStarted = () => {
+    scrollToSection("hero");
+    toast({
+      title: "Let's Get Started!",
+      description: "Scroll down to explore our revolutionary retail technologies.",
+    });
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -41,22 +65,22 @@ export const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <button
                 key={item.name}
-                href={item.href}
+                onClick={() => handleNavClick(item.href)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {item.name}
-              </a>
+              </button>
             ))}
           </div>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost">
+            <Button variant="ghost" onClick={handleSignIn}>
               Sign In
             </Button>
-            <Button variant="hero" className="group">
+            <Button variant="hero" className="group" onClick={handleGetStarted}>
               Get Started
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -82,20 +106,19 @@ export const Navigation = () => {
           <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => (
-                <a
+                <button
                   key={item.name}
-                  href={item.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors px-4 py-2"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => handleNavClick(item.href)}
+                  className="text-muted-foreground hover:text-foreground transition-colors px-4 py-2 text-left"
                 >
                   {item.name}
-                </a>
+                </button>
               ))}
               <div className="flex flex-col space-y-2 px-4 pt-4 border-t border-border">
-                <Button variant="ghost" className="justify-start">
+                <Button variant="ghost" className="justify-start" onClick={handleSignIn}>
                   Sign In
                 </Button>
-                <Button variant="hero" className="justify-start group">
+                <Button variant="hero" className="justify-start group" onClick={handleGetStarted}>
                   Get Started
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>

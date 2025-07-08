@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCart } from "@/hooks/useCart";
+import { useDemo } from "@/hooks/useDemo";
 import { 
   Mic, 
   MicOff, 
@@ -19,6 +21,8 @@ export const InteractiveDemo = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isARActive, setIsARActive] = useState(false);
   const [aiResponse, setAiResponse] = useState("");
+  const { addToCart } = useCart();
+  const { startDemo } = useDemo();
 
   const handleVoiceDemo = () => {
     setIsRecording(!isRecording);
@@ -38,18 +42,21 @@ export const InteractiveDemo = () => {
 
   const products = [
     {
+      id: "nike-air-max-270",
       name: "Nike Air Max 270",
       price: "$150",
       rating: 4.8,
       image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop"
     },
     {
+      id: "adidas-ultraboost-22",
       name: "Adidas Ultraboost 22",
       price: "$180",
       rating: 4.9,
       image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop"
     },
     {
+      id: "new-balance-1080v11",
       name: "New Balance 1080v11",
       price: "$160",
       rating: 4.7,
@@ -57,8 +64,25 @@ export const InteractiveDemo = () => {
     }
   ];
 
+  const handleAddToCart = (product: any) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image
+    });
+  };
+
+  const handleTryAR = (productName: string) => {
+    startDemo(`AR Try-On for ${productName}`);
+  };
+
+  const handleAIFeature = (feature: string) => {
+    startDemo(`AI ${feature}`);
+  };
+
   return (
-    <section className="py-24 bg-gradient-secondary">
+    <section id="interactive-demo" className="py-24 bg-gradient-secondary">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
           <Badge variant="secondary" className="mb-4">
@@ -169,7 +193,7 @@ export const InteractiveDemo = () => {
                               <p className="text-sm text-muted-foreground">Rating: {product.rating}/5</p>
                               <p className="text-lg font-bold text-primary">{product.price}</p>
                             </div>
-                            <Button variant="tech" size="sm">
+                            <Button variant="tech" size="sm" onClick={() => handleAddToCart(product)}>
                               Add to Cart
                             </Button>
                           </div>
@@ -255,7 +279,7 @@ export const InteractiveDemo = () => {
                               <p className="text-xs text-muted-foreground">Perfect fit detected</p>
                               <p className="text-sm font-bold text-primary">{product.price}</p>
                             </div>
-                            <Button variant="tech" size="sm">
+                            <Button variant="tech" size="sm" onClick={() => handleTryAR(product.name)}>
                               Try AR
                             </Button>
                           </div>
@@ -295,19 +319,19 @@ export const InteractiveDemo = () => {
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Button variant="outline" className="h-auto p-4 flex-col">
+                    <Button variant="outline" className="h-auto p-4 flex-col" onClick={() => handleAIFeature("Product Search")}>
                       <ShoppingCart className="w-5 h-5 mb-2" />
                       <span className="text-xs">Find Products</span>
                     </Button>
-                    <Button variant="outline" className="h-auto p-4 flex-col">
+                    <Button variant="outline" className="h-auto p-4 flex-col" onClick={() => handleAIFeature("Recommendations")}>
                       <Sparkles className="w-5 h-5 mb-2" />
                       <span className="text-xs">Get Recommendations</span>
                     </Button>
-                    <Button variant="outline" className="h-auto p-4 flex-col">
+                    <Button variant="outline" className="h-auto p-4 flex-col" onClick={() => handleAIFeature("Product Comparison")}>
                       <Eye className="w-5 h-5 mb-2" />
                       <span className="text-xs">Compare Items</span>
                     </Button>
-                    <Button variant="outline" className="h-auto p-4 flex-col">
+                    <Button variant="outline" className="h-auto p-4 flex-col" onClick={() => handleAIFeature("Voice Search")}>
                       <Mic className="w-5 h-5 mb-2" />
                       <span className="text-xs">Voice Search</span>
                     </Button>

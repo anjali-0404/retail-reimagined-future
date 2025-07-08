@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useDemo } from "@/hooks/useDemo";
 import { 
   Brain, 
   Eye, 
@@ -84,8 +85,14 @@ const additionalFeatures = [
 ];
 
 export const FeaturesSection = () => {
+  const { isLoading, startDemo } = useDemo();
+
+  const handleExploreDemo = (title: string) => {
+    startDemo(title);
+  };
+
   return (
-    <section className="py-24 bg-gradient-secondary">
+    <section id="features" className="py-24 bg-gradient-secondary">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
@@ -141,8 +148,13 @@ export const FeaturesSection = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 </div>
                 
-                <Button variant="tech" className="w-full group">
-                  Explore Technology
+                <Button 
+                  variant="tech" 
+                  className="w-full group" 
+                  onClick={() => handleExploreDemo(feature.title)}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "Explore Technology"}
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
